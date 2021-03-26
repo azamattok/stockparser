@@ -1,0 +1,35 @@
+spring:
+  application:
+    name: htc-file-manager
+  cloud:
+    consul:
+      binder:
+        enabled: true
+      scheme: ${consul_scheme:http}
+      host: ${consul_host:127.0.0.1}
+      port: ${consul_port:8500}
+      config:
+        format: yaml
+      discovery:
+        preferIpAddress: true
+    inetutils:
+      preferredNetworks:
+        - 192.168
+  flyway:
+    table: htc_fm_flyway_schema
+    locations: classpath:/db/migration/postgres
+  jpa:
+    hibernate:
+      ddl-auto: validate
+  http:
+    encoding:
+      enabled: true
+      force: true
+      charset: UTF-8
+
+logging:
+  level:
+    kz:
+      dilau:
+        htc:
+          filemanager: ${log_level:INFO}
