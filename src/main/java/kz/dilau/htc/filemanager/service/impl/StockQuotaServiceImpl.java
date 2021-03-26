@@ -6,13 +6,9 @@ import com.binance.api.client.domain.account.TradeHistoryItem;
 import com.binance.api.client.domain.general.ExchangeInfo;
 import com.binance.api.client.domain.market.*;
 import kz.dilau.htc.filemanager.config.DataProperties;
-import kz.dilau.htc.filemanager.domain.CandlestickData;
-import kz.dilau.htc.filemanager.domain.StockQuota;
 import kz.dilau.htc.filemanager.repository.CandlestickDataRepository;
 import kz.dilau.htc.filemanager.repository.StockQuotaRepository;
 import kz.dilau.htc.filemanager.service.StockQuotaService;
-import kz.dilau.htc.filemanager.util.ImageUtil;
-import kz.dilau.htc.filemanager.web.dto.FileInfoDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.ParameterizedTypeReference;
@@ -21,14 +17,9 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.CollectionUtils;
 import org.springframework.web.client.RestTemplate;
-import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import java.io.IOException;
-import java.nio.file.Path;
 import java.util.List;
 
 @Service

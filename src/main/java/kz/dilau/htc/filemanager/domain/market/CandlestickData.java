@@ -1,4 +1,4 @@
-package kz.dilau.htc.filemanager.domain;
+package kz.dilau.htc.filemanager.domain.market;
 
 import kz.dilau.htc.filemanager.domain.base.BaseEntity;
 import lombok.*;

@@ -17,7 +17,8 @@ public class DataProperties {
     private List<String> imageContentTypes;
     private ImageSize maxImageSize;
     private ImageSize previewImageSize;
-
+    private String binanceApiKey;
+    private String binanceSecret;
     @Data
     public static class ImageSize {
         private int width;
