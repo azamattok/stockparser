@@ -28,4 +28,8 @@ public class CandlestickDataResource {
         candlestickDataService.saveCandlestickFromBinanceBySymbol(symbol, Constants.STARTTIME);
     }
 
+    @GetMapping("/saveAllCandlestickMannually")
+    public void saveCandlestickBySymbo() {
+        candlestickDataService.saveCandlestickFromBinanceBySymbol(Constants.STARTTIME);
+    }
 }

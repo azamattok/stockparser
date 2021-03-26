@@ -6,4 +6,6 @@ public interface CandlestickDataService {
     void saveCandlestickFromBinanceBySchedulle();
 
     void saveCandlestickFromBinanceBySymbol(String symbol, Long startTime);
+
+    void saveCandlestickFromBinanceBySymbol(Long starttime);
 }

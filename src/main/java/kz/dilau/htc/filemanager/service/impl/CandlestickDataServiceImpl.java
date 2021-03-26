@@ -5,8 +5,10 @@ import com.binance.api.client.BinanceApiRestClient;
 import com.binance.api.client.domain.market.Candlestick;
 import com.binance.api.client.domain.market.CandlestickInterval;
 import kz.dilau.htc.filemanager.config.DataProperties;
+import kz.dilau.htc.filemanager.domain.general.SymbolInfoData;
 import kz.dilau.htc.filemanager.domain.market.CandlestickData;
 import kz.dilau.htc.filemanager.repository.CandlestickDataRepository;
+import kz.dilau.htc.filemanager.repository.general.SymbolInfoDataRepository;
 import kz.dilau.htc.filemanager.service.CandlestickDataService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -21,6 +23,7 @@ import java.util.Set;
 @Slf4j
 public class CandlestickDataServiceImpl implements CandlestickDataService {
     private final CandlestickDataRepository candlestickDataRepository;
+    private final SymbolInfoDataRepository symbolInfoDataRepository;
     private final DataProperties dataProperties;
 
 
@@ -99,21 +102,34 @@ public class CandlestickDataServiceImpl implements CandlestickDataService {
                     .takerBuyQuoteAssetVolume(candlestick.getTakerBuyQuoteAssetVolume())
                     .symbol(symbol)
                     .build();
-            maxCloseTime = Math.max(maxCloseTime, candlestick.getCloseTime());
+            maxCloseTime = Math.max(maxCloseTime, candlestick.getCloseTime() / 100);
             if (candlestickDataListTimeOpen.contains(candlestick.getOpenTime()) && candlestickDataListSymbol.contains(symbol)) {
-              return;
+                // return;
             } else {
                 candlestickDataRepository.save(candlestickData);
 
             }
 
         }
-        if (!candlestickBars.isEmpty()) {
-            startTime = maxCloseTime / 1000 + 86400;
+        if (!candlestickBars.isEmpty() && !startTime.equals(maxCloseTime)) {
+            startTime = maxCloseTime + 86400;
             saveCandlestickFromBinanceBySymbol(symbol, startTime);
         }
     }
 
+    @Override
+    public void saveCandlestickFromBinanceBySymbol(Long starttime) {
+        List<SymbolInfoData> symbolInfoDataList = symbolInfoDataRepository.findAll();
+        for (SymbolInfoData symbolInfoData : symbolInfoDataList) {
+            saveCandlestickFromBinanceBySymbol(symbolInfoData.getSymbol(), starttime);
+            try {
+                Thread.sleep(10000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+
+    }
 
     private BinanceApiRestClient getBinanceApiRestClient() {
         BinanceApiClientFactory factory = BinanceApiClientFactory.newInstance(dataProperties.getBinanceApiKey(), dataProperties.getBinanceSecret());
