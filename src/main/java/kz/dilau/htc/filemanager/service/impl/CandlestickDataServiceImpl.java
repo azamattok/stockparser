@@ -109,9 +109,12 @@ public class CandlestickDataServiceImpl implements CandlestickDataService {
     public void saveCandlestickFromBinanceBySymbol(Long starttime) {
         List<SymbolInfoData> symbolInfoDataList = symbolInfoDataRepository.findAll();
         for (SymbolInfoData symbolInfoData : symbolInfoDataList) {
-            saveCandlestickFromBinanceBySymbol(symbolInfoData.getSymbol(), starttime);
+            String symbol = symbolInfoData.getSymbol();
+            CandlestickData candlestickData = candlestickDataRepository.findFirstBySymbolOrderByIdDesc(symbol);
+            starttime=Math.max(starttime, candlestickData.getCloseTime()/100+1);
+            saveCandlestickFromBinanceBySymbol(symbol, starttime);
             try {
-                Thread.sleep(1000);
+                Thread.sleep(2000);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
