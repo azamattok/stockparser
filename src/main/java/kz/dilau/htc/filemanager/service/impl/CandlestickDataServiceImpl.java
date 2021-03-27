@@ -17,7 +17,7 @@ import org.springframework.stereotype.Service;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-
+import static java.util.Objects.nonNull;
 @Service
 @RequiredArgsConstructor
 @Slf4j
@@ -111,7 +111,9 @@ public class CandlestickDataServiceImpl implements CandlestickDataService {
         for (SymbolInfoData symbolInfoData : symbolInfoDataList) {
             String symbol = symbolInfoData.getSymbol();
             CandlestickData candlestickData = candlestickDataRepository.findFirstBySymbolOrderByIdDesc(symbol);
-            starttime=Math.max(starttime, candlestickData.getCloseTime()/100+1);
+            if (nonNull(candlestickData)) {
+                starttime = Math.max(starttime, candlestickData.getCloseTime() / 100 + 1);
+            }
             saveCandlestickFromBinanceBySymbol(symbol, starttime);
             try {
                 Thread.sleep(2000);
