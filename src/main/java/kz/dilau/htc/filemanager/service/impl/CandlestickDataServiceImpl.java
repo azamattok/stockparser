@@ -79,13 +79,6 @@ public class CandlestickDataServiceImpl implements CandlestickDataService {
         BinanceApiRestClient client = getBinanceApiRestClient();
         Long maxCloseTime = startTime;
         List<Candlestick> candlestickBars = client.getCandlestickBars(symbol, CandlestickInterval.DAILY, 1000, startTime, null);
-        List<CandlestickData> candlestickDataList = candlestickDataRepository.findAll();
-        Set<Long> candlestickDataListTimeOpen = new HashSet<>();
-        Set<String> candlestickDataListSymbol = new HashSet<>();
-        for (CandlestickData candlestickData : candlestickDataList) {
-            candlestickDataListTimeOpen.add(candlestickData.getOpenTime());
-            candlestickDataListSymbol.add(candlestickData.getSymbol());
-        }
         for (Candlestick candlestick : candlestickBars) {
 
             CandlestickData candlestickData = CandlestickData.builder()
@@ -103,12 +96,7 @@ public class CandlestickDataServiceImpl implements CandlestickDataService {
                     .symbol(symbol)
                     .build();
             maxCloseTime = Math.max(maxCloseTime, candlestick.getCloseTime() / 100);
-            if (candlestickDataListTimeOpen.contains(candlestick.getOpenTime()) && candlestickDataListSymbol.contains(symbol)) {
-                // return;
-            } else {
-                candlestickDataRepository.save(candlestickData);
-
-            }
+            candlestickDataRepository.save(candlestickData);
 
         }
         if (!candlestickBars.isEmpty() && !startTime.equals(maxCloseTime)) {
@@ -123,7 +111,7 @@ public class CandlestickDataServiceImpl implements CandlestickDataService {
         for (SymbolInfoData symbolInfoData : symbolInfoDataList) {
             saveCandlestickFromBinanceBySymbol(symbolInfoData.getSymbol(), starttime);
             try {
-                Thread.sleep(10000);
+                Thread.sleep(1000);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
